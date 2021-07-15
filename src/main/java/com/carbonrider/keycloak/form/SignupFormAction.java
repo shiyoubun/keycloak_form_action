@@ -76,12 +76,13 @@ public class SignupFormAction implements FormAction, FormActionFactory {
 
 		String eventError = Errors.INVALID_REGISTRATION;
 
-		if (isBlank(formData.getFirst("user.attributes.aliasName"))) {
-			errors.add(new FormMessage("user.attributes.aliasName", "missingAliasNameMessage"));
+		if (isBlank(formData.getFirst("username"))) {
+			errors.add(new FormMessage("RegistrationPage.FIELD_USERNAME", "missing username"));
 		}
 
-		if (isBlank(formData.getFirst("user.attributes.twitterURL"))) {
-			errors.add(new FormMessage("user.attributes.twitterURL", "missingTwitterURLMessage"));
+		if (isNotValidUsername(formData.getFirst("user.attributes.username"))) {
+			errors.add(new FormMessage("RegistrationPage.FIELD_USERNAME",
+					"invalid username, only accept ahplabets, numbers or underscores."));
 		}
 
 		if (errors.size() > 0) {
@@ -151,12 +152,15 @@ public class SignupFormAction implements FormAction, FormActionFactory {
 	 * Check if string is blank (null or lenght is 0 or contains only white
 	 * characters)
 	 * 
-	 * @param s
-	 *            to check
+	 * @param s to check
 	 * @return true if string is blank
 	 */
 	public static boolean isBlank(String s) {
 		return s == null || s.trim().length() == 0;
+	}
+
+	public static boolean isNotValidUsername(String s) {
+		return !((s.matches("^[a-zA-Z0-9_]*$")) && s.length() < 10);
 	}
 
 }
