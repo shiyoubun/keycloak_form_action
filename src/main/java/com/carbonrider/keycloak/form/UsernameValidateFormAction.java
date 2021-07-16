@@ -27,9 +27,9 @@ import org.keycloak.provider.ProviderConfigProperty;
  * @author Carbonrider
  *
  */
-public class SignupFormAction implements FormAction, FormActionFactory {
+public class UsernameValidateFormAction implements FormAction, FormActionFactory {
 
-	private static final String PROVIDER_ID = "organization-field-validation-action";
+	private static final String PROVIDER_ID = "username-field-validation-action";
 
 	private static Requirement[] REQUIREMENT_CHOICES = { Requirement.REQUIRED, Requirement.DISABLED };
 
@@ -77,12 +77,11 @@ public class SignupFormAction implements FormAction, FormActionFactory {
 		String eventError = Errors.INVALID_REGISTRATION;
 
 		if (isBlank(formData.getFirst("username"))) {
-			errors.add(new FormMessage("RegistrationPage.FIELD_USERNAME", "missing username"));
+			errors.add(new FormMessage("user.attributes.username", "missingUsernameMessage"));
 		}
 
-		if (isNotValidUsername(formData.getFirst("user.attributes.username"))) {
-			errors.add(new FormMessage("RegistrationPage.FIELD_USERNAME",
-					"invalid username, only accept ahplabets, numbers or underscores."));
+		if (isNotValidUsername(formData.getFirst("username"))) {
+			errors.add(new FormMessage("user.attributes.username", "invalidUsernameMessage"));
 		}
 
 		if (errors.size() > 0) {
@@ -160,7 +159,7 @@ public class SignupFormAction implements FormAction, FormActionFactory {
 	}
 
 	public static boolean isNotValidUsername(String s) {
-		return !((s.matches("^[a-zA-Z0-9_]*$")) && s.length() < 10);
+		return !((s.matches("^[a-zA-Z0-9_]*$")) && s.length() <= 25);
 	}
 
 }
